@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <!--
+     | POM Relationships
+     -->
+	<groupId>org.isma</groupId>
+    <artifactId>isma-swing-toolkit</artifactId>
+	<version>0.1</version>
+	<parent>
+        <groupId>org.isma</groupId>
+        <artifactId>isma-swing</artifactId>
+        <version>0.1</version>
+    </parent>
+	<!--
+    | Project Information
+    -->
+    <name>module swing toolkit</name>
+    <description>module isma swing toolkit</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.jfcunit</groupId>
+            <artifactId>jfcunit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.uispec4j</groupId>
+            <artifactId>uispec4j</artifactId>
+            <scope>test</scope>
+            <classifier>jdk16</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.isma</groupId>
+            <artifactId>isma-utils</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
