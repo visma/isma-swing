@@ -4,6 +4,7 @@ import org.isma.guitoolkit.util.WindowUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class SplashScreenFrame extends JFrame {
     private ImageIcon image = null;
@@ -20,23 +21,26 @@ public class SplashScreenFrame extends JFrame {
         setSize(width, height);
         WindowUtil.center(this);
 
-        pixels = new int[width][height];
         Robot robot = new Robot();
+        int xOrigin = getLocation().x;
+        int yOrigin = getLocation().y;
+
+        Rectangle rect = new Rectangle(xOrigin, yOrigin, width, height);
+        BufferedImage screenCapture = robot.createScreenCapture(rect);
+        pixels = new int[width][height];
         for (int x = 0; x < width; x++) {
             pixels[x] = new int[height];
             for (int y = 0; y < height; y++) {
-                //TODO slow method on my configuration (Graphic card driver pb ?)
-                pixels[x][y] = robot.getPixelColor(getLocation().x + x, getLocation().y + y).getRGB();
+                pixels[x][y] = screenCapture.getRGB(x, y);
             }
         }
-        setBackground(Color.WHITE);
     }
 
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D gc = (Graphics2D)g;
+        Graphics2D gc = (Graphics2D) g;
         Image imageBuffer = createImage(pixels.length, pixels[0].length);
         Graphics buffer = imageBuffer.getGraphics();
         for (int x = 0; x < pixels.length; x++) {

@@ -11,20 +11,18 @@ import org.picocontainer.defaults.DefaultPicoContainer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.InputStream;
-import java.util.Properties;
 
 public abstract class AbstractApplicationLauncher<C extends Configuration, L extends IMenuBarLogic>
-      implements ApplicationContext<C> {
+        implements ApplicationContext<C> {
+    private final ApplicationProperties properties;
     protected MutablePicoContainer picoContainer = new DefaultPicoContainer();
-    private Properties props;
-    protected C conf;
+    protected final C conf;
     private JFrame mainFrame;
     private L mainLogic;
 
 
     protected AbstractApplicationLauncher() throws Exception {
-        loadProperties();
+        properties = new ApplicationProperties();
         conf = buildConfiguration();
         registerImplementations();
     }
@@ -38,14 +36,7 @@ public abstract class AbstractApplicationLauncher<C extends Configuration, L ext
 
 
     public <T> T getGlobalComponent(Class<T> aClass) {
-        return (T)picoContainer.getComponentInstanceOfType(aClass);
-    }
-
-
-    protected void loadProperties() throws Exception {
-        InputStream stream = Class.forName(getClass().getName()).getResourceAsStream("application.properties");
-        props = new Properties();
-        props.load(stream);
+        return (T) picoContainer.getComponentInstanceOfType(aClass);
     }
 
 
@@ -73,32 +64,32 @@ public abstract class AbstractApplicationLauncher<C extends Configuration, L ext
     }
 
 
-    protected boolean mustDisplaySplashScreen() {
-        return false;
+    protected boolean showSplashScreen() {
+        return properties.showSplashScreen();
     }
 
 
     private void loadApplication() throws Exception {
-        JFrame splashFrame = null;
-        if (mustDisplaySplashScreen()) {
-            splashFrame = SplashScreenFrameBuilder.build(getSplashScreenImageIcon());
+        if (showSplashScreen()) {
+            JFrame splashFrame = SplashScreenFrameBuilder.build(getSplashScreenImageIcon());
             splashFrame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-           
-        }
-        loadBeforeUI();
-        if (mustDisplaySplashScreen()) {
-            splashFrame.dispose();
+            loadBeforeUI();
+            killSplashScreen(splashFrame);
         }
     }
 
+    protected void loadBeforeUI() {
+        ;
+    }
 
-    protected void loadBeforeUI() throws Exception {
-        Thread.sleep(500);
+    private void killSplashScreen(JFrame splashFrame) throws InterruptedException {
+        Thread.sleep(properties.getSplashScreenMinDuration());
+        splashFrame.dispose();
     }
 
 
     protected ImageIcon getSplashScreenImageIcon() {
-        return new ImageIcon(getClass().getResource(props.getProperty("application.splashscreen")));
+        return new ImageIcon(getClass().getResource(properties.getSplashScreen()));
     }
 
 
@@ -108,12 +99,12 @@ public abstract class AbstractApplicationLauncher<C extends Configuration, L ext
 
 
     private String getTitle() {
-        return props.getProperty("application.title");
+        return properties.getTitle();
     }
 
 
     public ImageIcon getApplicationImageIcon() {
-        String iconPath = props.getProperty("application.icon");
+        String iconPath = properties.getIcon();
         return new ImageIcon(getClass().getResource(iconPath));
     }
 
@@ -122,17 +113,17 @@ public abstract class AbstractApplicationLauncher<C extends Configuration, L ext
 
 
     public String getApplicationName() {
-        return props.getProperty("application.name");
+        return properties.getApplicationName();
     }
 
 
     public String getApplicationDescription() {
-        return props.getProperty("application.description");
+        return properties.getApplicationDescription();
     }
 
 
     public String getApplicationVersion() {
-        return props.getProperty("application.version");
+        return properties.getApplicationVersion();
     }
 
 
