@@ -1,17 +1,20 @@
 package org.isma.core.components;
 
-import junit.framework.TestCase;
 import org.isma.core.event.AbstractActionMenu;
 import org.isma.core.icons.CoreIconEnum;
+import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-public class MenuBuilderTest extends TestCase {
+import static junit.framework.Assert.*;
+
+public class MenuBuilderTest {
     private MenuBuilder menuBuilder = new MenuBuilder();
 
 
+    @Test
     public void testMenuBuilding() throws Exception {
         JMenu menu = menuBuilder.buildMenu("toto", KeyEvent.VK_A);
         assertEquals("toto", menu.getText());
@@ -19,6 +22,7 @@ public class MenuBuilderTest extends TestCase {
     }
 
 
+    @Test
     public void testMenuItemBuilding() throws Exception {
         final ImageIcon helpIcon = CoreIconEnum.HELP_ICON.getImageIcon();
         assertNotNull(helpIcon);
