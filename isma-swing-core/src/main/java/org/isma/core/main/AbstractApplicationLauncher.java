@@ -6,6 +6,7 @@ import org.isma.core.Configuration;
 import org.isma.core.event.ApplicationWindowListener;
 import org.isma.core.logic.IMenuBarLogic;
 import org.isma.guitoolkit.SplashScreenFrameBuilder;
+import org.isma.utils.OsValidator;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
@@ -41,7 +42,7 @@ public abstract class AbstractApplicationLauncher<C extends Configuration, L ext
 
 
     protected void launch() throws Exception {
-        UIManager.setLookAndFeel(new WindowsClassicLookAndFeel());
+        setLookAndFeel();
 
         loadApplication();
 
@@ -57,6 +58,12 @@ public abstract class AbstractApplicationLauncher<C extends Configuration, L ext
         mainFrame.setVisible(true);
         mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    }
+
+    private void setLookAndFeel() throws UnsupportedLookAndFeelException {
+        if (OsValidator.isWindows()){
+            UIManager.setLookAndFeel(new WindowsClassicLookAndFeel());
+        }
     }
 
 
